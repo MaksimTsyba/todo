@@ -3,3 +3,4 @@ uwsgi
 psycopg2
 django-grappelli
 django-rest-framework
+python-decouple
