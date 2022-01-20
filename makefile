@@ -4,6 +4,9 @@ run:
 stop:
 	docker-compose stop
 
+build:
+	docker-compose build
+
 restart:
 	docker-compose restart
 

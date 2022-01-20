@@ -1,10 +1,9 @@
 version: '3.7'
 services:
   db:
-    container_name: todo_db
     build:
       context: .
-      dockerfile: dockerfiles/db
+      dockerfile: dockerfiles/db/Dockerfile
     env_file:
       - .docker-env/dev/db.env
     volumes:
@@ -19,33 +18,32 @@ services:
 #      context: .
 #      dockerfile: dockerfiles/memcahed
 #    command: memcached -m 128
-  app:
-    container_name: todo_app
+  web:
+    restart: always
     build:
       context: .
-      dockerfile: dockerfiles/app
+      dockerfile: dockerfiles/web/Dockerfile
     env_file:
       - .docker-env/dev/db.env
     volumes:
       - ./app:/app
     depends_on:
       - db
-#    command: uwsgi --ini /etc/uwsgi.ini
-    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
+#    command: uwsgi --ini /etc/uwsgi.ini
+    command: python manage.py runserver 0.0.0.0:8000
+
     networks:
       app_network:
-
   nginx:
-    container_name: todo_nginx
     volumes:
       - ./app:/app
     build:
       context: .
-      dockerfile: dockerfiles/nginx
+      dockerfile: dockerfiles/nginx/Dockerfile
     depends_on:
-      - app
+      - web
     ports:
       - "8080:8080"
     networks:

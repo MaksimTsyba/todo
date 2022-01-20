@@ -1,6 +1,6 @@
 Django==4.0.1
-uwsgi
-psycopg2
-django-grappelli
-django-rest-framework
-python-decouple
+uwsgi==2.0.20
+psycopg2==2.9.3
+django-grappelli==3.0.1
+django-rest-framework==0.1.0
+python-decouple==3.5
