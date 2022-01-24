@@ -27,6 +27,7 @@ services:
       - .docker-env/dev/db.env
     volumes:
       - ./app:/app
+      - ./config/pip/requirements.txt:/tmp/requirements.txt
     depends_on:
       - db
     ports:

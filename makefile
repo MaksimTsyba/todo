@@ -11,10 +11,13 @@ restart:
 	docker-compose restart
 
 migrate:
-	docker-compose run --rm app python manage.py migrate
+	docker-compose run --rm web python manage.py migrate
 
 makemi:
-	docker-compose run --rm app python manage.py makemigrations
+	docker-compose run --rm web python manage.py makemigrations
 
 collect:
-	docker-compose run --rm app python manage.py collectstatic --noinput -l
+	docker-compose run --rm web python manage.py collectstatic --noinput -l
+
+#pip:
+#	docker-compose run --rm web pip install -r /tmp/requirements.txt
