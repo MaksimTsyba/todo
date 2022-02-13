@@ -143,6 +143,21 @@ REST_FRAMEWORK = {
     ]
 }
 
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = config('EMAIL_HOST', default='')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_PORT = config('EMAIL_PORT', default='')
+# EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=True, cast=bool)
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='todo@localhost')
+
+# Celery settings
+# CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+# CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_BROKER_URL = config('CELERY_BROKER')
+# CELERY_RESULT_BACKEND = config('CELERY_BROKER')
+# CELERY_BROKER = config('CELERY_BROKER')
+# CELERY_BACKEND = config('CELERY_BACKEND')
 # SWAGGER_SETTINGS = {
 #    'SECURITY_DEFINITIONS': {
 #       'Basic': {

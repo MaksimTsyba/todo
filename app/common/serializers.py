@@ -3,14 +3,6 @@ from common.models import Project, User
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-
-    def create(self, validated_data):
-        password = validated_data.pop('password')
-        user_item = User.objects.create(**validated_data)
-        user_item.set_password(password)
-        user_item.save()
-        return user_item
-
     class Meta:
         model = User
         fields = ['username', 'password', 'email']
@@ -26,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
 
-    owner = UserSerializer()
+    owner = UserSerializer(read_only=True)
 
     # def validate_name(self, value):
     #     if 'django' not in value.lower():
@@ -41,6 +33,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id', 'name', 'type', 'owner']
+        # read_only_fields = ['owner']
 
 
 

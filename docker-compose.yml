@@ -25,11 +25,15 @@ services:
       dockerfile: dockerfiles/web/Dockerfile
     env_file:
       - .docker-env/dev/db.env
+#    environment:
+#      - CELERY_BROKER=redis://redis:6379/0
+#      - CELERY_BACKEND=redis://redis:6379/0
     volumes:
       - ./app:/app
       - ./config/pip/requirements.txt:/tmp/requirements.txt
     depends_on:
       - db
+      - redis
     ports:
       - "8000:8000"
 #    command: uwsgi --ini /etc/uwsgi.ini
@@ -49,6 +53,48 @@ services:
       - "8080:8080"
     networks:
       app_network:
-
+#  redis:
+#    image: redis:5-alpine
+#    networks:
+#      app_network:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    environment:
+      RABBITMQ_NODENAME: "rabbit@localhost"
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      app_network:
+  celery:
+    build:
+      context: .
+      dockerfile: dockerfiles/web/Dockerfile
+    command: celery -A project worker --uid=nobody --gid=nogroup -l INFO --logfile=celery.log
+    volumes:
+      - ./app:/app
+      - ./config/pip/requirements.txt:/tmp/requirements.txt
+    depends_on:
+      - web
+      - rabbitmq
+    networks:
+      app_network:
+  flower:
+    build:
+      context: .
+      dockerfile: dockerfiles/web/Dockerfile
+    command: celery -A project flower --port=5555 --broker=amqp://rabbitmq:rabbitmq@rabbitmq:5672
+    ports:
+      - "5555:5555"
+    depends_on:
+      - rabbitmq
+      - web
+      - celery
+    networks:
+      app_network:
 networks:
    app_network:

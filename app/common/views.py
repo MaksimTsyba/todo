@@ -7,6 +7,9 @@ from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema, swagger_serializer_method
+from common.celery_tasks import create_task
+from django.http import JsonResponse
+from django.core.mail import send_mail
 from drf_yasg import openapi
 
 
@@ -33,4 +36,8 @@ def user_registration(request):
     else:
         return Response(user.errors)
 
+
+def start_task(request):
+    task = create_task.delay(int(1))
+    return JsonResponse({"task_id": task.id}, status=202)
 

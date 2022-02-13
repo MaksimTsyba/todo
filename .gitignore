@@ -2,3 +2,4 @@
 .docker-env
 dbdata
 /app/.env
+/app/celery.log
